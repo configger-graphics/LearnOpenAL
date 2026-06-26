@@ -25,8 +25,6 @@ int main() {
   glViewport(0, 0, 800, 600);
 	
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-	stbi_set_flip_vertically_on_load(true);
 	
 	glEnable(GL_DEPTH_TEST);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
