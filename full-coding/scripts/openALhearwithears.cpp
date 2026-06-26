@@ -91,6 +91,11 @@ int main() {
 
 	while (!glfwWindowShouldClose(window)) {
 		// add to it later
-	}  
-  return 0;
+	} 
+	Context=alcGetCurrentContext();
+	Device=alcGetContextsDevice(Context);
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(Context);
+	alcCloseDevice(Device); 
+	return 0;
 }
