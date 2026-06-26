@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstdlib>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <AL/al.h>
+#include <AL/alc.h>
+#define STB_VORBIS_IMPLEMENTATION
+#define STB_VORBIS_HEADER_ONLY
+#include "stb_vorbis.c"
+
+int main() {
+  	if (window == NULL) {
+		std::cout << "Failed to create window" << "\n";
+		glfwTerminate();
+		return -1;
+  }
+  glfwMakeContextCurrent(window);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+  {
+            std::cout << "Failed to initialize glad" << "\n";
+            return -1;
+  }
+
+  glViewport(0, 0, 800, 600);
+	
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	stbi_set_flip_vertically_on_load(true);
+	
+	glEnable(GL_DEPTH_TEST);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+  // where your OpenAL Code starts
+  
+	ALCdevice* AudioDevice = alcOpenDevice(NULL); // perferred device
+	
+	if (AudioDevice) {
+		ALCcontext* Context = alcCreateContext(AudioDevice,NULL);
+		if (Context != NULL) {
+			alcMakeContextCurrent(Context);
+		}
+	}
+
+	ALboolean g_bEAX = alIsExtensionPresent("EAX2.0");
+
+  alGetError(); // clear the code
+	
+	unsigned int ABO;
+	alGenBuffers(1, &ABO);
+	if ((error = alGetError()) != AL_NO_ERROR) {
+    switch (error) {
+      case AL_INVALID_NAME: std::cout << "Invalid name\n"; break;
+      case AL_INVALID_ENUM: std::cout << "Invalid enum\n"; break;
+      case AL_INVALID_VALUE: std::cout << "Invalid value\n"; break;
+      case AL_INVALID_OPERATION: std::cout << "Invalid operation!\n"; break;
+      case AL_OUT_OF_MEMORY: std::cout << "Out of memory!\n"; break;
+    }
+    alDeleteBuffers(1, &ABO);
+    return 1;
+  }
+	unsigned int SBO;
+	alGenSources(1, &SBO);
+
+	alERR();
+	
+	alSourcei(SBO, AL_BUFFER, (ALuint)ABO);
+  return 0;
+}
