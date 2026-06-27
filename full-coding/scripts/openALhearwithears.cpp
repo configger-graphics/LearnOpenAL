@@ -75,6 +75,7 @@ int main() {
 		return 1;
 	}
 	ALenum format;
+	short* newOutput = (short*)malloc((size_t)numSamples * sizeof(short));
 	if (NrChannels == 1) {
 		format = AL_FORMAT_MONO16;
 	} else if (NrChannels == 2) {
@@ -82,7 +83,7 @@ int main() {
 			for (int i = 0; i < numSamples; i++) {
 				int leftChannel = output[i*2];
 				int rightChannel = output[i*2+1];
-				short mono = static_cast<short>((leftChannel + rightChannel) / 2);
+				short mono = static_cast<short>((leftChannel + rightChannel) / 2); // the formula!!! love it or hate it, it's needed here.
 				
 				newOutput[i] = mono;
 			}
